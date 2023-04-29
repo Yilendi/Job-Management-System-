@@ -1,8 +1,22 @@
 package com.yilenda.job;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "dashboard")
 public class Job {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="emp_id")
+    private Long id;
+
+    @Column(name="occupation")
     private String occupation;
+
+    @Column(name="occupation_level")
     private String occupationLevel;
+
+    @Column(name="annual_salary")
     private int annualSalary;
 
     // default constructor

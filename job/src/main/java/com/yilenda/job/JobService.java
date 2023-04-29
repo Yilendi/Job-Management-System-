@@ -1,6 +1,7 @@
 package com.yilenda.job;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -16,11 +17,13 @@ import com.opencsv.CSVReader;
 public class JobService {
 
     private static final String CSV_FILE_PATH = "src/national_M2021_dl.csv";
-    private static final String url = "jdbc:mysql://localhost:3306/jobboard";
+    private static final String url = "jdbc:mysql://localhost:3306/dashboard";
     private final String username = "root";
     private final String password = "password01";
 
     private Connection conn;
+    @Autowired
+    JobRepository jobRepository;
 
     public JobService() {
         try {
@@ -35,14 +38,10 @@ public class JobService {
             // Set up connection to MySQL server
             conn = DriverManager.getConnection(url, username, password);
 
-            // Create database if it doesn't exist
-            String sql = "CREATE DATABASE IF NOT EXISTS jobdashboard";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.executeUpdate();
-            }
+
 
             // Switch to mydatabase
-            sql = "USE jobdashboard";
+            String sql = "USE dashboard";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.executeUpdate();
             }
@@ -50,6 +49,11 @@ public class JobService {
             // Create jobs table if it doesn't exist
             sql = "CREATE TABLE IF NOT EXISTS dashboard (id INT NOT NULL AUTO_INCREMENT, " +
                     "occupation VARCHAR(255), occupation_level VARCHAR(255), annual_salary INT, PRIMARY KEY (id))";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.executeUpdate();
+            }
+
+            sql = "TRUNCATE TABLE dashboard";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.executeUpdate();
             }
@@ -107,6 +111,8 @@ public class JobService {
         }
     }
 
+
+
     public void close() throws Exception {
         try {
             if (conn != null) {
@@ -117,24 +123,33 @@ public class JobService {
         }
     }
 
-    public void deleteJob(String occupation) throws Exception {
-        PreparedStatement stmt = null;
-        try {
-            stmt = conn.prepareStatement("DELETE FROM dashboard WHERE occupation = ?");
-            stmt.setString(1, occupation);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    // ignore exception
-                }
-            }
-        }
+
+    // CREATE
+    public Job createJob(Job job) {
+        return jobRepository.save(job);
     }
 
+    // READ
+    public List<Job> getJobs() {
+        return jobRepository.findAll();
+    }
 
+    public Job getJobById(Long jobId) {
+        return jobRepository.findById(jobId).get();
+    }
+
+    // DELETE
+    public void deleteJobById(Long jobId) {
+        jobRepository.deleteById(jobId);
+    }
+
+    // UPDATE
+    public Job updateJob(Long jobId, Job jobDetails) {
+        Job job = jobRepository.findById(jobId).get();
+        job.setOccupation(jobDetails.getOccupation());
+        job.setOccupationLevel(jobDetails.getOccupationLevel());
+        job.setAnnualSalary(jobDetails.getAnnualSalary());
+
+        return jobRepository.save(job);
+    }
 }

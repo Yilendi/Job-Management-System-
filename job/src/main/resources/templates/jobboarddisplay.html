@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Job Form</title>
+</head>
+<body>
+<h1>Job Form</h1>
+<form id="jobForm">
+
+    <label for="occupation">Occupation:</label>
+    <input type="text" id="occupation" name="occupation"><br><br>
+    <label for="occupationLevel">Occupation Level:</label>
+    <input type="text" id="occupationLevel" name="occupationLevel"><br><br>
+    <button type="submit">Create Job</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#jobForm').submit(function(event) {
+            event.preventDefault();
+
+            var formData = {
+
+                occupation: $('#occupation').val(),
+                occupationLevel: $('#occupationLevel').val()
+            };
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/jobs",
+                data: JSON.stringify(formData),
+                dataType: 'json',
+                success: function(result) {
+                    $('#jobForm')[0].reset();
+                    alert('Job created successfully!');
+                },
+                error: function(e) {
+                    console.log('Error:', e);
+                    alert('Error creating job!');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

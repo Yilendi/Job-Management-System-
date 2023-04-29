@@ -1,5 +1,6 @@
 package com.yilenda.job;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,16 @@ public class JobController {
     public ResponseEntity<List<Job>> getJobs() {
         List<Job> jobs = jobService.getJobs();
         return ResponseEntity.ok(jobs);
+    }
+
+    @GetMapping("/")
+    public String getJobs(Model model) {
+        List<Job> jobs = jobService.getJobs();
+        for (Job job : jobs) {
+            System.out.println(job.getOccupation());
+        }
+        model.addAttribute("jobs", jobs);
+        return "index"; // Return the name of the HTML template
     }
 
     // GET job by id

@@ -16,13 +16,13 @@ public class JobboardApplication {
 		SpringApplication.run(JobboardApplication.class, args);
 	}
 
-	@Bean
-	public CommandLineRunner importData() {
-		return args -> {
-			jobService = new JobService();
-			jobService.importJobsFromCsvFile();
-			jobService.close();
-			System.out.println("Done!");
-		};
-	}
+//	@Bean
+//	public CommandLineRunner importData() {
+//		return args -> {
+//			jobService = new JobService();
+//			jobService.importJobsFromCsvFile();
+//			jobService.close();
+//			System.out.println("Done!");
+//		};
+//	}
 }

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Board</title>
+</head>
+<body>
+
+<h1>Job Board</h1>
+<div align="center"></div>
+    <h1>Job List</h1>
+    <table border = "1">
+        <thread>
+            <tr>
+                <th>Occupation</th>
+                <th>Occupation Level</th>
+                <th>Annual Salary</th>
+
+            </tr>
+        </thread>
+        <tbody>
+        <!-- Iterate through the list of jobs and display their info -->
+        <tr th:each="job : ${jobs}">
+            <td th:text="${job.occupation}"></td>
+            <td th:text="${job.occupationLevel}"></td>
+            <td th:text="${job.annualSalary}"></td>
+
+        </tbody>
+    </table>
+
+
+</body>
+</html>

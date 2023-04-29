@@ -1,49 +1,70 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Job Form</title>
-</head>
-<body>
-<h1>Job Form</h1>
-<form id="jobForm">
+<html xmlns:th="http://www.thymeleaf.org">
 
+<head>
+    <title>Job List</title>
+</head>
+
+<body>
+
+<h1>Job List</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Occupation</th>
+        <th>Occupation Level</th>
+        <th>Annual Salary</th>
+        <th>Annual Salary Increase Graph</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate through the list of jobs and display their info -->
+    <tr th:each="job : ${jobs}">
+        <td th:text="${job.occupation}"></td>
+        <td th:text="${job.occupationLevel}"></td>
+        <td th:text="${job.annualSalary}"></td>
+        <td>
+            <div id="graph" th:attr="data-salary=${job.annualSalary}"></div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- JavaScript for drawing the salary increase graph -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var salaries = document.querySelectorAll("#graph");
+    salaries.forEach(function (salary) {
+        var initialSalary = parseInt(salary.dataset.salary);
+        var salaryData = [];
+        salaryData.push(initialSalary);
+        for (var i = 1; i <= 5; i++) {
+            var nextSalary = initialSalary * 1.05;
+            salaryData.push(nextSalary);
+            initialSalary = nextSalary;
+        }
+        // Draw the graph using a JavaScript library like D3.js
+    });
+    /*]]>*/
+</script>
+
+<h2>Create New Job</h2>
+
+<form th:action="@{/api/jobs}" method="post" th:object="${newJob}">
     <label for="occupation">Occupation:</label>
-    <input type="text" id="occupation" name="occupation"><br><br>
+    <input type="text" id="occupation" name="occupation" th:field="*{occupation}" required>
+    <br>
     <label for="occupationLevel">Occupation Level:</label>
-    <input type="text" id="occupationLevel" name="occupationLevel"><br><br>
+    <input type="text" id="occupationLevel" name="occupationLevel" th:field="*{occupationLevel}" required>
+    <br>
+    <label for="salary">Salary:</label>
+    <input type="number" id="salary" name="salary" th:field="*{salary}" required>
+    <br>
     <button type="submit">Create Job</button>
 </form>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#jobForm').submit(function(event) {
-            event.preventDefault();
 
-            var formData = {
-
-                occupation: $('#occupation').val(),
-                occupationLevel: $('#occupationLevel').val()
-            };
-
-            $.ajax({
-                type: "POST",
-                contentType: "application/json",
-                url: "/jobs",
-                data: JSON.stringify(formData),
-                dataType: 'json',
-                success: function(result) {
-                    $('#jobForm')[0].reset();
-                    alert('Job created successfully!');
-                },
-                error: function(e) {
-                    console.log('Error:', e);
-                    alert('Error creating job!');
-                }
-            });
-        });
-    });
-</script>
 </body>
+
 </html>

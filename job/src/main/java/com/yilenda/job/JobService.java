@@ -4,7 +4,7 @@ package com.yilenda.job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
@@ -97,7 +97,7 @@ public class JobService {
             stmt.setString(2, occupationLevel);
             stmt.setInt(3, annualSalary);
             stmt.executeUpdate();
-            System.out.println("Added " + occupation + " " + occupationLevel + " " + annualSalary);
+//            System.out.println("Added " + occupation + " " + occupationLevel + " " + annualSalary);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

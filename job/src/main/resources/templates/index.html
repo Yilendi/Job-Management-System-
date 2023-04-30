@@ -10,13 +10,13 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
 </head>
 <body>
-<div class="container-fluid">
+<div class="container-fluid text-center">
 
     <h1>Job List</h1>
     <a th:href = "@{/addNew}" class = "btn btn-primary btn-sm mb-3"> Add Job </a>
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 mx-auto">
             <div th:each="joblist : ${joblists}" class="card mb-3">
                 <div class="card-header">
                     <h4 class="card-title" th:text="${joblist.occupation}"></h4>
@@ -25,61 +25,54 @@
                     <p class="card-text">Occupation Level: <span th:text="${joblist.occupationLevel}"></span></p>
                     <p class="card-text">Annual Salary: <span th:text="${joblist.annualSalary}"></span></p>
                 </div>
-                <div class="card-footer" style="height: 500px;">
-                    <div id="graph-[[${joblist.id}]]" style="width:100%; height:100%;"></div>
-                    <script>
-                        var salaryData = [];
-                        for (var j = 0; j < 5; j++) {
-                            salaryData.push([[${joblist.annualSalary}]] * Math.pow(1.03, j+1));
-                        }
-                        drawLineChart(salaryData, 'graph-[[${joblist.id}]]');
-                    </script>
+                <div class="card-footer">
+                    <a th:href = "@{/delete/{id}(id=${joblist.id})}" class = "btn btn-danger btn-sm"> Delete </a>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
-<script type="text/javascript">
-    // function to draw line chart
-    function drawLineChart(series, container) {
-        Highcharts.chart(container, {
-            chart: {
-                type: 'line',
-                width: 500
-            },
-            xAxis: {
-                categories: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5']
-            },
-            yAxis: {
-                title: {
-                    text: 'Annual Salary'
-                }
-            },
-            tooltip: {
-                formatter: function() {
-                    return '<strong>' + this.x + ': </strong>' + this.y;
-                }
-            },
-            series: [{
-                name: 'Annual Salary',
-                data: series
-            }]
-        });
-    }
-    // // iterate through each job and draw line chart
-    // var jobs = [[${joblists}]];
-    // for (var i = 0; i < jobs.length; i++) {
-    //     var category = [];
-    //     var series = [];
-    //     for (var j = 0; j < 5; j++) {
-    //         category.push('Year ' + (j+1));
-    //         series.push(jobs[i].annualSalary * Math.pow(1.03, j+1));
-    //     }
-    //     drawLineChart(category, series, 'graph-' + jobs[i].id);
-    // }
+<!--<script type="text/javascript">-->
+<!--    // function to draw line chart-->
+<!--    function drawLineChart(series, container) {-->
+<!--        Highcharts.chart(container, {-->
+<!--            chart: {-->
+<!--                type: 'line',-->
+<!--                width: 500-->
+<!--            },-->
+<!--            xAxis: {-->
+<!--                categories: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5']-->
+<!--            },-->
+<!--            yAxis: {-->
+<!--                title: {-->
+<!--                    text: 'Annual Salary'-->
+<!--                }-->
+<!--            },-->
+<!--            tooltip: {-->
+<!--                formatter: function() {-->
+<!--                    return '<strong>' + this.x + ': </strong>' + this.y;-->
+<!--                }-->
+<!--            },-->
+<!--            series: [{-->
+<!--                name: 'Annual Salary',-->
+<!--                data: series-->
+<!--            }]-->
+<!--        });-->
+<!--    }-->
+<!--    // // iterate through each job and draw line chart-->
+<!--    // var jobs = [[${joblists}]];-->
+<!--    // for (var i = 0; i < jobs.length; i++) {-->
+<!--    //     var category = [];-->
+<!--    //     var series = [];-->
+<!--    //     for (var j = 0; j < 5; j++) {-->
+<!--    //         category.push('Year ' + (j+1));-->
+<!--    //         series.push(jobs[i].annualSalary * Math.pow(1.03, j+1));-->
+<!--    //     }-->
+<!--    //     drawLineChart(category, series, 'graph-' + jobs[i].id);-->
+<!--    // }-->
 
 
-</script>
+<!--</script>-->
 </body>
 </html>

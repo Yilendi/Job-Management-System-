@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -31,9 +32,8 @@ public class JobController {
         if (joblists.size() > 10) {
             joblists = joblists.subList(joblists.size() - 10, joblists.size());
         }
-        for (Job joblist : joblists) {
-            System.out.println(joblist.getOccupation());
-        }
+        // reverse joblists
+        Collections.reverse(joblists);
         model.addAttribute("joblists", joblists);
         return "index"; // Return the name of the HTML template
     }
@@ -41,6 +41,12 @@ public class JobController {
     public String addNew(Model model) {
         model.addAttribute("newjob", new Job());
         return "addNew";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteJob(@PathVariable("id") Long id, Model model) {
+        jobService.deleteJobById(id);
+        return "redirect:/";
     }
 
     @PostMapping("/saveJob")

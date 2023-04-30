@@ -7,7 +7,9 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
           crossorigin="anonymous">
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+
 </head>
 <body>
 <div class="container-fluid text-center">
@@ -19,12 +21,17 @@
         <div class="col-md-4 mx-auto">
             <div th:each="joblist : ${joblists}" class="card mb-3">
                 <div class="card-header">
-                    <h4 class="card-title" th:text="${joblist.occupation}"></h4>
+                    <h4 class="card-title" th:text="'Occupation: ' + ${joblist.occupation}"></h4>
+                    <h5 class="card-subtitle mb-2 text-muted">Occupation Level: <span th:text="${joblist.occupationLevel}"></span></h5>
                 </div>
                 <div class="card-body">
-                    <p class="card-text">Occupation Level: <span th:text="${joblist.occupationLevel}"></span></p>
+
                     <p class="card-text">Annual Salary: <span th:text="${joblist.annualSalary}"></span></p>
+                    <div class="graph-container">
+                    </div>
+
                 </div>
+
                 <div class="card-footer">
                     <a th:href = "@{/delete/{id}(id=${joblist.id})}" class = "btn btn-danger btn-sm"> Delete </a>
                 </div>
@@ -33,46 +40,105 @@
     </div>
 
 </div>
-<!--<script type="text/javascript">-->
-<!--    // function to draw line chart-->
-<!--    function drawLineChart(series, container) {-->
-<!--        Highcharts.chart(container, {-->
-<!--            chart: {-->
-<!--                type: 'line',-->
-<!--                width: 500-->
-<!--            },-->
-<!--            xAxis: {-->
-<!--                categories: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5']-->
-<!--            },-->
-<!--            yAxis: {-->
-<!--                title: {-->
-<!--                    text: 'Annual Salary'-->
-<!--                }-->
-<!--            },-->
-<!--            tooltip: {-->
-<!--                formatter: function() {-->
-<!--                    return '<strong>' + this.x + ': </strong>' + this.y;-->
-<!--                }-->
-<!--            },-->
-<!--            series: [{-->
-<!--                name: 'Annual Salary',-->
-<!--                data: series-->
-<!--            }]-->
-<!--        });-->
-<!--    }-->
-<!--    // // iterate through each job and draw line chart-->
-<!--    // var jobs = [[${joblists}]];-->
-<!--    // for (var i = 0; i < jobs.length; i++) {-->
-<!--    //     var category = [];-->
-<!--    //     var series = [];-->
-<!--    //     for (var j = 0; j < 5; j++) {-->
-<!--    //         category.push('Year ' + (j+1));-->
-<!--    //         series.push(jobs[i].annualSalary * Math.pow(1.03, j+1));-->
-<!--    //     }-->
-<!--    //     drawLineChart(category, series, 'graph-' + jobs[i].id);-->
-<!--    // }-->
+<script>
+    var cards = document.querySelectorAll('.card');
+    var dataArr = [];
+    var labelArr = [];
+
+    cards.forEach(function(card, i) {
+        var annualSalary = card.querySelector('.card-text span').textContent;
+        var annualSalaryValues = [];
+
+        for (var j = 0; j < 5; j++) {
+            var salary = j == 0 ? annualSalary : annualSalary * Math.pow(1.03, j);
+            annualSalaryValues.push(parseFloat(salary));
+        }
+        for (var i = 0; i < dataArr.length; i++) {
+            console.log(dataArr[i]);
+        }
+
+        dataArr.push(annualSalaryValues);
+
+        var canvas = document.createElement("canvas");
+        canvas.setAttribute("id", "myChart" + (i+1));
+        card.querySelector('.graph-container').appendChild(canvas);
+    });
+
+    dataArr.forEach(function(e,i) {
+        var chartID = "myChart"+ (i+1)
+        var ctx = document.getElementById(chartID).getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["Year 1", "Year 2", "Year 3", "Year 4", "Year 5"],
+                datasets: [{
+                    label: labelArr[i],
+                    data: e,
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Annual Increase of 3%'
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            maxTicksLimit: 5,
+                        },
+                        gridLines: {
+                            display: false,
+                        },
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:false,
+                        }
+                    }]
+                }
+            }
+        });
+    });
+
+</script>
 
 
+<!--</script>-->
+<!--<script>-->
+<!--    // Define the chart configuration options-->
+<!--    var options = {-->
+<!--        chart: {-->
+<!--            type: 'line'-->
+<!--        },-->
+<!--        title: {-->
+<!--            text: 'My Line Chart'-->
+<!--        },-->
+<!--        xAxis: {-->
+<!--            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']-->
+<!--        },-->
+<!--        yAxis: {-->
+<!--            title: {-->
+<!--                text: 'Value'-->
+<!--            }-->
+<!--        },-->
+<!--        series: [{-->
+<!--            name: 'Series 1',-->
+<!--            data: [1, 3, 2, 4, 5, 7]-->
+<!--        }, {-->
+<!--            name: 'Series 2',-->
+<!--            data: [2, 1, 4, 3, 6, 5]-->
+<!--        }]-->
+<!--    };-->
+
+<!--    // Create the chart-->
+<!--    Highcharts.chart('myChart', options);-->
 <!--</script>-->
 </body>
 </html>

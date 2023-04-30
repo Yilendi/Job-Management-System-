@@ -56,9 +56,10 @@ To add a new job, click the "Add Job" button on the home page. This will take yo
 ## Demo
 
 
-https://user-images.githubusercontent.com/108242130/235344157-6fdf0469-2ac3-4d90-b2cd-045dd50e46a1.mov
 
 
+
+https://user-images.githubusercontent.com/108242130/235379235-206f0ec8-efc9-46f2-95c8-f0755f79ff4f.mov
 
 
 ## Conclusion

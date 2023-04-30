@@ -8,7 +8,7 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private Long id;
+    public Long id;
 
     @Column(name="occupation")
     private String occupation;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:margin="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Job Board</title>
@@ -9,37 +9,77 @@
           crossorigin="anonymous">
     <script src="https://code.highcharts.com/highcharts.js"></script>
 </head>
-
 <body>
-
-
-<div style="width: 50%; margin: 0 auto;">
+<div class="container-fluid">
 
     <h1>Job List</h1>
     <a th:href = "@{/addNew}" class = "btn btn-primary btn-sm mb-3"> Add Job </a>
-    <table border = "1" class = "table table-striped table-responsive-md">
-        <thread>
-            <tr>
-                <th>Occupation</th>
-                <th>Occupation Level</th>
-                <th>Annual Salary</th>
-                <th>Annual Salary Increase Graph</th>
 
-            </tr>
-        </thread>
-        <tbody>
-        <!-- Iterate through the list of jobs and display their info -->
-        <tr th:each="joblist : ${joblists}">
-            <td th:text="${joblist.occupation}"></td>
-            <td th:text="${joblist.occupationLevel}"></td>
-            <td th:text="${joblist.annualSalary}"></td>
-
-        </tr>
-        </tbody>
-    </table>
-
-
+    <div class="row">
+        <div class="col-md-4">
+            <div th:each="joblist : ${joblists}" class="card mb-3">
+                <div class="card-header">
+                    <h4 class="card-title" th:text="${joblist.occupation}"></h4>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Occupation Level: <span th:text="${joblist.occupationLevel}"></span></p>
+                    <p class="card-text">Annual Salary: <span th:text="${joblist.annualSalary}"></span></p>
+                </div>
+                <div class="card-footer" style="height: 500px;">
+                    <div id="graph-[[${joblist.id}]]" style="width:100%; height:100%;"></div>
+                    <script>
+                        var salaryData = [];
+                        for (var j = 0; j < 5; j++) {
+                            salaryData.push([[${joblist.annualSalary}]] * Math.pow(1.03, j+1));
+                        }
+                        drawLineChart(salaryData, 'graph-[[${joblist.id}]]');
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
+<script type="text/javascript">
+    // function to draw line chart
+    function drawLineChart(series, container) {
+        Highcharts.chart(container, {
+            chart: {
+                type: 'line',
+                width: 500
+            },
+            xAxis: {
+                categories: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5']
+            },
+            yAxis: {
+                title: {
+                    text: 'Annual Salary'
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<strong>' + this.x + ': </strong>' + this.y;
+                }
+            },
+            series: [{
+                name: 'Annual Salary',
+                data: series
+            }]
+        });
+    }
+    // // iterate through each job and draw line chart
+    // var jobs = [[${joblists}]];
+    // for (var i = 0; i < jobs.length; i++) {
+    //     var category = [];
+    //     var series = [];
+    //     for (var j = 0; j < 5; j++) {
+    //         category.push('Year ' + (j+1));
+    //         series.push(jobs[i].annualSalary * Math.pow(1.03, j+1));
+    //     }
+    //     drawLineChart(category, series, 'graph-' + jobs[i].id);
+    // }
+
+
+</script>
 </body>
 </html>

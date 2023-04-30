@@ -3,6 +3,7 @@
 # Job Management System
 
 This is a web application built with Spring Boot and Spring Data JPA to manage jobs. 
+Only jobs folder contains useful information.
 
 ## Setup
 

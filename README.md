@@ -53,6 +53,14 @@ The visual layer is implemented using Thymeleaf templates. The application has t
 
 To add a new job, click the "Add Job" button on the home page. This will take you to the new job page where you can fill in the job details and submit the form to create a new job.
 
+## Demo
+
+
+https://user-images.githubusercontent.com/108242130/235344157-6fdf0469-2ac3-4d90-b2cd-045dd50e46a1.mov
+
+
+
+
 ## Conclusion
 
 That's all there is to it! With this application, you can easily manage jobs and keep track of important information like occupation, occupation level, and annual salary.

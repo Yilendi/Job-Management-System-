@@ -10,19 +10,19 @@ import org.springframework.context.annotation.Bean;
 public class JobboardApplication {
 
 	@Autowired
-	private JobService jobService;
+	JobService jobService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(JobboardApplication.class, args);
 	}
 
-//	@Bean
-//	public CommandLineRunner importData() {
-//		return args -> {
-//			jobService = new JobService();
-//			jobService.importJobsFromCsvFile();
-//			jobService.close();
-//			System.out.println("Done!");
-//		};
-//	}
+	@Bean
+	public CommandLineRunner importData() {
+		return args -> {
+			jobService.setUp();
+			jobService.importJobsFromCsvFile();
+			jobService.close();
+			System.out.println("Done!");
+		};
+	}
 }

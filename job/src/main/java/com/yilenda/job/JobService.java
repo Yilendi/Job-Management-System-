@@ -17,7 +17,7 @@ import com.opencsv.CSVReader;
 public class JobService {
 
     private static final String CSV_FILE_PATH = "src/national_M2021_dl.csv";
-    private static final String url = "jdbc:mysql://localhost:3306/dashboard";
+    private static final String url = "jdbc:mysql://localhost:3306/jobboard";
     private final String username = "root";
     private final String password = "password01";
 
@@ -25,13 +25,7 @@ public class JobService {
     @Autowired
     JobRepository jobRepository;
 
-    public JobService() {
-        try {
-            setUp();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public void setUp() throws Exception {
         try {
@@ -41,7 +35,7 @@ public class JobService {
 
 
             // Switch to mydatabase
-            String sql = "USE dashboard";
+            String sql = "USE jobboard";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.executeUpdate();
             }
@@ -52,7 +46,7 @@ public class JobService {
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.executeUpdate();
             }
-
+//
             sql = "TRUNCATE TABLE dashboard";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.executeUpdate();
